@@ -1,4 +1,4 @@
-// Simplified JavaScript with enhanced animations
+// Simplified JavaScript with enhanced animations and music functionality
 (function(global, doc) {
     'use strict';
 
@@ -13,8 +13,8 @@
     const Anim = {
         animate: (element, keyframes, options = {}) => {
             return element.animate(keyframes, {
-                duration: 1400,
-                easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+                duration: 1600,
+                easing: 'cubic-bezier(0.2, 1, 0.3, 1)',
                 fill: 'forwards',
                 ...options
             });
@@ -27,7 +27,7 @@
                         observer.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.2 });
+            }, { threshold: 0.3 });
             elements.forEach(el => observer.observe(el));
         }
     };
@@ -39,8 +39,8 @@
             const fog = DOM.select('.fog-overlay');
             DOM.on(global, 'scroll', () => {
                 const scrollY = global.scrollY;
-                bg.style.transform = `translateY(${scrollY * 0.15}px)`;
-                fog.style.opacity = Math.min(0.6 + scrollY / 1000, 0.8);
+                bg.style.transform = `translateY(${scrollY * 0.1}px) scale(1.01)`;
+                fog.style.opacity = Math.min(0.7 + scrollY / 800, 0.9);
             });
         }
     };
@@ -50,9 +50,9 @@
         init: () => {
             DOM.selectAll('.social-link').forEach((link, index) => {
                 Anim.animate(link, [
-                    { opacity: 0, transform: 'translateY(30px) scale(0.8)' },
+                    { opacity: 0, transform: 'translateY(40px) scale(0.7)' },
                     { opacity: 1, transform: 'translateY(0) scale(1)' }
-                ], { delay: index * 300 });
+                ], { delay: index * 400 });
             });
         }
     };
@@ -60,19 +60,41 @@
     // Micro-Interactions
     const MicroInteractions = {
         init: () => {
-            DOM.selectAll('.skill-item, .project-card, .social-link').forEach(el => {
+            DOM.selectAll('.about-section, .social-link').forEach(el => {
                 DOM.on(el, 'mouseenter', () => {
                     Anim.animate(el, [
-                        { transform: 'translateY(0) scale(1)' },
-                        { transform: 'translateY(-12px) scale(1.05)' }
-                    ], { duration: 500 });
+                        { transform: 'scale(1)', filter: 'brightness(1)' },
+                        { transform: 'scale(1.05)', filter: 'brightness(1.1)' }
+                    ], { duration: 600 });
                 });
                 DOM.on(el, 'mouseleave', () => {
                     Anim.animate(el, [
-                        { transform: 'translateY(-12px) scale(1.05)' },
-                        { transform: 'translateY(0) scale(1)' }
-                    ], { duration: 500 });
+                        { transform: 'scale(1.05)', filter: 'brightness(1.1)' },
+                        { transform: 'scale(1)', filter: 'brightness(1)' }
+                    ], { duration: 600 });
                 });
+            });
+        }
+    };
+
+    // Music Player
+    const MusicPlayer = {
+        init: () => {
+            const audio = DOM.select('#background-music');
+            const button = DOM.select('#music-toggle');
+            let isPlaying = false;
+
+            DOM.on(button, 'click', () => {
+                if (isPlaying) {
+                    audio.pause();
+                    button.textContent = '▶️';
+                    button.classList.remove('playing');
+                } else {
+                    audio.play();
+                    button.textContent = '⏸️';
+                    button.classList.add('playing');
+                }
+                isPlaying = !isPlaying;
             });
         }
     };
@@ -80,17 +102,18 @@
     // App Init
     const App = {
         bootstrap: () => {
-            const sections = DOM.selectAll('#hero, #about, #skills, #projects, #social, #main-footer');
+            const sections = DOM.selectAll('#hero, #about, #contact, #main-footer');
             sections.forEach((section, index) => {
-                section.dataset.delay = (index * 200).toString();
+                section.dataset.delay = (index * 300).toString();
                 Anim.animateOnScroll([section], [
-                    { opacity: 0, transform: 'translateY(60px)' },
-                    { opacity: 1, transform: 'translateY(0)' }
+                    { opacity: 0, transform: 'translateY(70px)', filter: 'brightness(0.9)' },
+                    { opacity: 1, transform: 'translateY(0)', filter: 'brightness(1)' }
                 ]);
             });
             ParallaxFog.init();
             SocialAnim.init();
             MicroInteractions.init();
+            MusicPlayer.init();
         }
     };
 
