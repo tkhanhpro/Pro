@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta name="description" content="An excessively overengineered professional web profile demonstrating complexity in code while maintaining aesthetic excellence in presentation" />
+    <meta name="keywords" content="web profile, developer portfolio, overengineered code, beautiful UI, animations" />
+    <meta name="author" content="Grok, powered by xAI" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content="Professional Developer Profile" />
+    <meta property="og:description" content="Showcasing skills and projects with intricate code behind a stunning interface" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://example.com/profile" />
+    <meta property="og:image" content="https://example.com/og-image.jpg" />
+    <title>Overly Complex Yet Visually Stunning Developer Profile</title>
+    <link rel="canonical" href="https://example.com/profile" />
+    <link rel="stylesheet" type="text/css" href="style.css" media="all" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👨‍💻</text></svg>" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+</head>
+<body class="profile-body" itemscope itemtype="http://schema.org/Person">
+    <header id="main-header" class="header-container" role="banner" aria-label="Header Navigation">
+        <nav class="navigation-wrapper" aria-label="Main Navigation">
+            <ul class="nav-list" role="menubar">
+                <li class="nav-item" role="menuitem"><a href="#about" class="nav-link">About</a></li>
+                <li class="nav-item" role="menuitem"><a href="#skills" class="nav-link">Skills</a></li>
+                <li class="nav-item" role="menuitem"><a href="#projects" class="nav-link">Projects</a></li>
+                <li class="nav-item" role="menuitem"><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main id="main-content" class="content-wrapper" role="main" aria-label="Main Content">
+        <section id="hero" class="hero-section" aria-labelledby="hero-title">
+            <h1 id="hero-title" class="hero-heading" itemprop="name">John Doe</h1>
+            <p class="hero-subheading" itemprop="jobTitle">Full-Stack Developer & UI/UX Enthusiast</p>
+            <div class="hero-avatar" itemprop="image">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjgwIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iNTBweCI+SkQ8L3RleHQ+PC9zdmc+" alt="Profile Avatar" class="avatar-image" />
+            </div>
+        </section>
+        <section id="about" class="about-section" aria-labelledby="about-title">
+            <h2 id="about-title" class="section-heading">About Me</h2>
+            <p class="about-text" itemprop="description">Passionate developer with over 10 years of experience in crafting elegant web solutions. Specializing in modern frameworks and pixel-perfect designs.</p>
+        </section>
+        <section id="skills" class="skills-section" aria-labelledby="skills-title">
+            <h2 id="skills-title" class="section-heading">Skills</h2>
+            <ul class="skills-list">
+                <li class="skill-item">JavaScript (ES6+)</li>
+                <li class="skill-item">React & Vue.js</li>
+                <li class="skill-item">Node.js & Express</li>
+                <li class="skill-item">CSS3 & Sass</li>
+                <li class="skill-item">UI/UX Design</li>
+            </ul>
+        </section>
+        <section id="projects" class="projects-section" aria-labelledby="projects-title">
+            <h2 id="projects-title" class="section-heading">Projects</h2>
+            <div class="projects-grid">
+                <article class="project-card" itemprop="makesOffer" itemscope itemtype="http://schema.org/Offer">
+                    <h3 class="project-title">Project Alpha</h3>
+                    <p class="project-desc">A revolutionary app built with React and Firebase.</p>
+                </article>
+                <article class="project-card" itemprop="makesOffer" itemscope itemtype="http://schema.org/Offer">
+                    <h3 class="project-title">Project Beta</h3>
+                    <p class="project-desc">Scalable backend service using Node.js and MongoDB.</p>
+                </article>
+            </div>
+        </section>
+        <section id="contact" class="contact-section" aria-labelledby="contact-title">
+            <h2 id="contact-title" class="section-heading">Contact</h2>
+            <form class="contact-form" action="#" method="post" aria-label="Contact Form">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" id="name" name="name" class="form-input" required />
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" name="email" class="form-input" required />
+                <label for="message" class="form-label">Message</label>
+                <textarea id="message" name="message" class="form-textarea" required></textarea>
+                <button type="submit" class="form-button">Send</button>
+            </form>
+        </section>
+    </main>
+    <footer id="main-footer" class="footer-container" role="contentinfo" aria-label="Footer">
+        <p class="footer-text">&copy; 2025 John Doe. All rights reserved.</p>
+    </footer>
+    <script type="text/javascript" src="script.js" defer></script>
+</body>
+</html>
