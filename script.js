@@ -1,157 +1,153 @@
-// Ultra-complex JavaScript with modules, observers, promises, and unnecessary abstractions
-(function(global, doc, undefined) {
+// Hyper-complex JavaScript with reactive state, animations, and micro-interactions
+(function(global, doc) {
     'use strict';
 
-    // Polyfill for Object.assign if needed
-    const assign = Object.assign || function(target, ...sources) {
-        sources.forEach(source => {
-            for (let key in source) {
-                if (source.hasOwnProperty(key)) {
-                    target[key] = source[key];
-                }
+    // Reactive State Module
+    const ReactiveStateModule = (function() {
+        class ReactiveState {
+            constructor(initial) {
+                this.value = initial;
+                this.observers = new Set();
             }
-        });
-        return target;
-    };
-
-    // Custom Event Emitter Module
-    const EventEmitterModule = (function() {
-        function EventEmitter() {
-            this.events = {};
+            set(value) {
+                this.value = value;
+                this.observers.forEach(fn => fn(value));
+            }
+            subscribe(fn) {
+                this.observers.add(fn);
+                return () => this.observers.delete(fn);
+            }
         }
-        EventEmitter.prototype.on = function(event, listener) {
-            if (!this.events[event]) this.events[event] = [];
-            this.events[event].push(listener);
-        };
-        EventEmitter.prototype.emit = function(event, ...args) {
-            if (this.events[event]) {
-                this.events[event].forEach(listener => listener(...args));
-            }
-        };
-        return EventEmitter;
+        return initial => new ReactiveState(initial);
     })();
 
-    // DOM Utility Factory with currying
-    const DOMUtilityFactory = (function() {
-        const createCurriedSelector = selector => doc.querySelector.bind(doc, selector);
-        const createCurriedAllSelector = selector => doc.querySelectorAll.bind(doc, selector);
-        const addEvent = (element, event, handler) => element.addEventListener(event, handler);
-        const removeEvent = (element, event, handler) => element.removeEventListener(event, handler);
-        const toggleClass = (element, className) => element.classList.toggle(className);
-        return {
-            getSelector: createCurriedSelector,
-            getAllSelectors: createCurriedAllSelector,
-            attachEvent: addEvent,
-            detachEvent: removeEvent,
-            classToggle: toggleClass
-        };
+    // DOM Manipulation Service
+    const DOMService = (function() {
+        const select = selector => doc.querySelector(selector);
+        const selectAll = selector => Array.from(doc.querySelectorAll(selector));
+        const on = (el, event, handler) => el.addEventListener(event, handler, { passive: true });
+        const toggleClass = (el, className, force) => el.classList.toggle(className, force);
+        const getRect = el => el.getBoundingClientRect();
+        return { select, selectAll, on, toggleClass, getRect };
     })();
 
-    // Animation Observer Pattern
-    const AnimationObserver = (function(EventEmitter) {
-        class Observer extends EventEmitter {
-            constructor() {
-                super();
-                this.observers = new Map();
-            }
-            subscribe(element, callback) {
-                this.observers.set(element, callback);
-            }
-            notify(entries) {
+    // Animation Engine with Web Animations API
+    const AnimationEngine = (function() {
+        const animate = (element, keyframes, options = {}) => {
+            return element.animate(keyframes, {
+                duration: 1200,
+                easing: 'cubic-bezier(0.25, 0.8, 0.25, 1)',
+                fill: 'forwards',
+                ...options
+            });
+        };
+        const animateOnScroll = (elements, keyframes) => {
+            const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        const callback = this.observers.get(entry.target);
-                        if (callback) callback(entry.target);
+                        animate(entry.target, keyframes, { delay: entry.target.dataset.delay || 0 });
+                        observer.unobserve(entry.target);
                     }
                 });
-            }
-            observe(elements) {
-                const io = new IntersectionObserver(this.notify.bind(this), { threshold: 0.1 });
-                elements.forEach(el => io.observe(el));
-            }
-        }
-        return new Observer();
-    })(EventEmitterModule);
-
-    // Async Animation Promise Chain
-    const AnimationChain = (function() {
-        const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
-        const animateElement = async (element, className, delayMs = 0) => {
-            await delay(delayMs);
-            DOMUtilityFactory.classToggle(element, className);
+            }, { threshold: 0.25 });
+            elements.forEach(el => observer.observe(el));
         };
-        return { animate: animateElement };
+        return { animate, animateOnScroll };
     })();
 
+    // Parallax Effect Manager
+    const ParallaxManager = (function(DOM, Anim) {
+        const init = () => {
+            const bg = DOM.select('.parallax-background');
+            DOM.on(global, 'scroll', () => {
+                const scrollY = global.scrollY;
+                bg.style.transform = `translateY(${scrollY * 0.2}px)`;
+            });
+        };
+        return { init };
+    })(DOMService, AnimationEngine);
+
+    // Navigation Controller
+    const NavigationController = (function(DOM, Anim, State) {
+        const navState = State({ activeSection: '' });
+        const init = () => {
+            DOM.selectAll('.nav-link').forEach(link => {
+                DOM.on(link, 'click', e => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href');
+                    const target = DOM.select(targetId);
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    navState.set(targetId);
+                });
+            });
+        };
+        navState.subscribe(section => {
+            DOM.selectAll('.nav-link').forEach(link => {
+                const href = link.getAttribute('href');
+                DOM.toggleClass(link, 'active', href === section);
+            });
+        });
+        return { init };
+    })(DOMService, AnimationEngine, ReactiveStateModule);
+
+    // Social Links Animation Controller
+    const SocialLinksController = (function(DOM, Anim) {
+        const init = () => {
+            DOM.selectAll('.social-link').forEach((link, index) => {
+                Anim.animate(link, [
+                    { opacity: 0, transform: 'translateY(20px) scale(0.8)' },
+                    { opacity: 1, transform: 'translateY(0) scale(1)' }
+                ], { delay: index * 250 });
+            });
+        };
+        return { init };
+    })(DOMService, AnimationEngine);
+
+    // Micro-Interactions for Hover
+    const MicroInteractionManager = (function(DOM, Anim) {
+        const init = () => {
+            DOM.selectAll('.skill-item, .project-card, .social-link').forEach(el => {
+                DOM.on(el, 'mouseenter', () => {
+                    Anim.animate(el, [
+                        { transform: 'translateY(0)' },
+                        { transform: 'translateY(-10px)' }
+                    ], { duration: 400 });
+                });
+                DOM.on(el, 'mouseleave', () => {
+                    Anim.animate(el, [
+                        { transform: 'translateY(-10px)' },
+                        { transform: 'translateY(0)' }
+                    ], { duration: 400 });
+                });
+            });
+        };
+        return { init };
+    })(DOMService, AnimationEngine);
+
     // Main Application Orchestrator
-    const AppOrchestrator = (function(DOMUtil, AnimObserver, AnimChain) {
-        const config = {
-            sections: ['#hero', '#about', '#skills', '#projects', '#contact'],
-            animationClass: 'animate-visible',
-            navLinks: '.nav-link',
-            formSelector: '.contact-form'
-        };
-
-        const initObservers = () => {
-            const sections = config.sections.map(DOMUtil.getSelector);
-            sections.forEach(section => {
-                AnimObserver.subscribe(section, el => AnimChain.animate(el, config.animationClass));
+    const AppOrchestrator = (function(DOM, Anim, Parallax, Nav, Social, Micro) {
+        const sections = ['#hero', '#about', '#skills', '#projects', '#social'];
+        const init = () => {
+            // Animate sections
+            DOM.selectAll(sections.join(',')).forEach((section, index) => {
+                section.dataset.delay = (index * 150).toString();
+                Anim.animateOnScroll([section], [
+                    { opacity: 0, transform: 'translateY(50px)' },
+                    { opacity: 1, transform: 'translateY(0)' }
+                ]);
             });
-            AnimObserver.observe(sections);
+            // Initialize managers
+            Parallax.init();
+            Nav.init();
+            Social.init();
+            Micro.init();
         };
+        return { bootstrap: init };
+    })(DOMService, AnimationEngine, ParallaxManager, NavigationController, SocialLinksController, MicroInteractionManager);
 
-        const smoothScroll = e => {
-            e.preventDefault();
-            const targetId = e.target.getAttribute('href');
-            const target = DOMUtil.getSelector(targetId);
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        };
+    // Bootstrap
+    DOMService.on(doc, 'DOMContentLoaded', () => AppOrchestrator.bootstrap());
 
-        const initNavigation = () => {
-            const links = DOMUtil.getAllSelectors(config.navLinks);
-            links.forEach(link => DOMUtil.attachEvent(link, 'click', smoothScroll));
-        };
-
-        const validateForm = form => {
-            const inputs = form.querySelectorAll('input[required], textarea[required]');
-            let valid = true;
-            inputs.forEach(input => {
-                if (!input.value.trim()) valid = false;
-            });
-            return valid;
-        };
-
-        const handleFormSubmit = async e => {
-            e.preventDefault();
-            const form = e.target;
-            if (validateForm(form)) {
-                // Simulate async submission
-                await AnimChain.animate(form, 'submitting', 0);
-                await AnimChain.animate(form, 'submitted', 1000);
-                form.reset();
-            } else {
-                AnimChain.animate(form, 'error', 0);
-            }
-        };
-
-        const initForm = () => {
-            const form = DOMUtil.getSelector(config.formSelector);
-            if (form) DOMUtil.attachEvent(form, 'submit', handleFormSubmit);
-        };
-
-        return {
-            bootstrap: () => {
-                initObservers();
-                initNavigation();
-                initForm();
-            }
-        };
-    })(DOMUtilityFactory, AnimationObserver, AnimationChain);
-
-    // Bootstrap the application on DOMContentLoaded
-    const bootstrapApp = () => AppOrchestrator.bootstrap();
-    DOMUtilityFactory.attachEvent(doc, 'DOMContentLoaded', bootstrapApp);
-
-    // Expose for potential extensions (unnecessary but adds complexity)
-    assign(global, { App: AppOrchestrator });
+    // Expose for extensions
+    global.App = AppOrchestrator;
 })(window, document);
