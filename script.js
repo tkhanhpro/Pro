@@ -1,4 +1,4 @@
-// Simplified JavaScript with enhanced animations and music functionality
+// Simple JavaScript for animations
 (function(global, doc) {
     'use strict';
 
@@ -13,8 +13,8 @@
     const Anim = {
         animate: (element, keyframes, options = {}) => {
             return element.animate(keyframes, {
-                duration: 1600,
-                easing: 'cubic-bezier(0.2, 1, 0.3, 1)',
+                duration: 1800,
+                easing: 'cubic-bezier(0.18, 1, 0.32, 1)',
                 fill: 'forwards',
                 ...options
             });
@@ -27,21 +27,8 @@
                         observer.unobserve(entry.target);
                     }
                 });
-            }, { threshold: 0.3 });
+            }, { threshold: 0.4 });
             elements.forEach(el => observer.observe(el));
-        }
-    };
-
-    // Parallax and Fog Manager
-    const ParallaxFog = {
-        init: () => {
-            const bg = DOM.select('.parallax-background');
-            const fog = DOM.select('.fog-overlay');
-            DOM.on(global, 'scroll', () => {
-                const scrollY = global.scrollY;
-                bg.style.transform = `translateY(${scrollY * 0.1}px) scale(1.01)`;
-                fog.style.opacity = Math.min(0.7 + scrollY / 800, 0.9);
-            });
         }
     };
 
@@ -50,9 +37,9 @@
         init: () => {
             DOM.selectAll('.social-link').forEach((link, index) => {
                 Anim.animate(link, [
-                    { opacity: 0, transform: 'translateY(40px) scale(0.7)' },
+                    { opacity: 0, transform: 'translateY(30px) scale(0.8)' },
                     { opacity: 1, transform: 'translateY(0) scale(1)' }
-                ], { delay: index * 400 });
+                ], { delay: index * 300 });
             });
         }
     };
@@ -60,16 +47,16 @@
     // Micro-Interactions
     const MicroInteractions = {
         init: () => {
-            DOM.selectAll('.about-section, .social-link').forEach(el => {
+            DOM.selectAll('.avatar-image, .about-section, .social-link').forEach(el => {
                 DOM.on(el, 'mouseenter', () => {
                     Anim.animate(el, [
                         { transform: 'scale(1)', filter: 'brightness(1)' },
-                        { transform: 'scale(1.05)', filter: 'brightness(1.1)' }
+                        { transform: 'scale(1.08)', filter: 'brightness(1.15)' }
                     ], { duration: 600 });
                 });
                 DOM.on(el, 'mouseleave', () => {
                     Anim.animate(el, [
-                        { transform: 'scale(1.05)', filter: 'brightness(1.1)' },
+                        { transform: 'scale(1.08)', filter: 'brightness(1.15)' },
                         { transform: 'scale(1)', filter: 'brightness(1)' }
                     ], { duration: 600 });
                 });
@@ -77,43 +64,19 @@
         }
     };
 
-    // Music Player
-    const MusicPlayer = {
-        init: () => {
-            const audio = DOM.select('#background-music');
-            const button = DOM.select('#music-toggle');
-            let isPlaying = false;
-
-            DOM.on(button, 'click', () => {
-                if (isPlaying) {
-                    audio.pause();
-                    button.textContent = '▶️';
-                    button.classList.remove('playing');
-                } else {
-                    audio.play();
-                    button.textContent = '⏸️';
-                    button.classList.add('playing');
-                }
-                isPlaying = !isPlaying;
-            });
-        }
-    };
-
     // App Init
     const App = {
         bootstrap: () => {
-            const sections = DOM.selectAll('#hero, #about, #contact, #main-footer');
+            const sections = DOM.selectAll('.avatar-container, #about, #contact, #main-footer');
             sections.forEach((section, index) => {
-                section.dataset.delay = (index * 300).toString();
+                section.dataset.delay = (index * 400).toString();
                 Anim.animateOnScroll([section], [
-                    { opacity: 0, transform: 'translateY(70px)', filter: 'brightness(0.9)' },
+                    { opacity: 0, transform: 'translateY(50px)', filter: 'brightness(0.9)' },
                     { opacity: 1, transform: 'translateY(0)', filter: 'brightness(1)' }
                 ]);
             });
-            ParallaxFog.init();
             SocialAnim.init();
             MicroInteractions.init();
-            MusicPlayer.init();
         }
     };
 
